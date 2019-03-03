@@ -84,22 +84,32 @@ CONFIG_SCHEMA = vol.Schema({
 }, extra=vol.ALLOW_EXTRA)
 
 
+class CloudNotAvailable(HomeAssistantError):
+    """Raised when an action requires the cloud but it's not available."""
+
+
 @bind_hass
 @callback
 def async_is_logged_in(hass):
     """Test if user is logged in."""
-    return hass.data[DOMAIN].is_logged_in
+    return DOMAIN in hass.data and hass.data[DOMAIN].is_logged_in
 
 
 @bind_hass
 async def async_create_cloudhook(hass, webhook_id):
     """Create a cloudhook."""
+    if not async_is_logged_in(hass):
+        raise CloudNotAvailable
+
     return await hass.data[DOMAIN].cloudhooks.async_create(webhook_id)
 
 
 @bind_hass
 async def async_delete_cloudhook(hass, webhook_id):
     """Delete a cloudhook."""
+    if not async_is_logged_in(hass):
+        raise CloudNotAvailable
+
     return await hass.data[DOMAIN].cloudhooks.async_delete(webhook_id)
 
 
