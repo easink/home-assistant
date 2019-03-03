@@ -7,6 +7,7 @@ import os
 import voluptuous as vol
 
 from homeassistant.core import callback
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.const import (
     EVENT_HOMEASSISTANT_START, CLOUD_NEVER_EXPOSED_ENTITIES, CONF_REGION,
     CONF_MODE, CONF_NAME)
