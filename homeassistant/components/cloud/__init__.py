@@ -13,6 +13,7 @@ from homeassistant.const import (
 from homeassistant.helpers import entityfilter, config_validation as cv
 from homeassistant.loader import bind_hass
 from homeassistant.util import dt as dt_util
+from homeassistant.util.aiohttp import MockRequest
 from homeassistant.components.alexa import smart_home as alexa_sh
 from homeassistant.components.google_assistant import helpers as ga_h
 from homeassistant.components.google_assistant import const as ga_c
@@ -100,6 +101,14 @@ async def async_create_cloudhook(hass, webhook_id):
 async def async_delete_cloudhook(hass, webhook_id):
     """Delete a cloudhook."""
     return await hass.data[DOMAIN].cloudhooks.async_delete(webhook_id)
+
+
+def is_cloudhook_request(request):
+    """Test if a request came from a cloudhook.
+
+    Async friendly.
+    """
+    return isinstance(request, MockRequest)
 
 
 async def async_setup(hass, config):
